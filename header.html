@@ -1,0 +1,200 @@
+<html>
+<head>
+
+  <title>Petmart 	and Grooming Salon</title>
+  <meta name="description" content="website description" />
+  <meta name="keywords" content="website keywords, website keywords" />
+  <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
+  <link rel="stylesheet" type="text/css" href="style/style.css" />
+  
+  <style type="text/css">
+.phone_msg
+{
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 10px;
+}
+
+.email_msg 
+{
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 10px;
+}
+.fn_msg {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 10px;
+	
+}
+.ln_msg {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 10px;
+}
+</style>
+
+
+<script>
+
+
+function ValidateMobNumber(txtMobId) {
+  var fld = document.getElementById(txtMobId);
+  var mob = /^[1-9]{1}[0-9]{9}$/;
+
+  if (fld.value == "") {
+  document.getElementById("contact_msg").innerHTML=("You didn't enter a phone number.");
+  document.getElementById("contact").className="reqInput";
+  fld.value = "";
+  fld.focus();
+  return false;
+ }
+  else if (isNaN(fld.value)) {
+	  
+	 document.getElementById("contact_msg").innerHTML=("remove illegal characters");
+  document.getElementById("contact").className="reqInput"; 
+  //alert("The phone number contains illegal characters.");
+  fld.value = "";
+  fld.focus();
+  return false;
+ }
+ else if (!(fld.value.length == 10)) {
+	 
+	 document.getElementById("contact_msg").innerHTML=("Please enter 10 digit mobile number");
+  document.getElementById("contact").className="reqInput"; 
+  //alert("The phone number is the wrong length. \nPlease enter 10 digit mobile no.");
+  fld.value = "";
+  fld.focus();
+  return false;
+ }
+ else
+	{
+	    document.getElementById("contact_msg").innerHTML="";
+		document.getElementById("contact").className="";
+	}
+
+}
+
+
+  function validateEmail()
+  {
+	var x=document.forms["form1"]["email"].value;
+	var atpos=x.indexOf("@");
+	var dotpos=x.lastIndexOf(".");
+	if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length)
+	{
+	    document.getElementById("email_msg").innerHTML="Email Invalid";
+		document.getElementById("email").className="reqInput";
+		//alert("Not a valid e-mail address");
+		return false;
+	}
+	else
+	{
+	    document.getElementById("email_msg").innerHTML="";
+		document.getElementById("email").className="";
+	}
+  }
+
+
+
+
+ function validateInput(idval)
+ {
+	
+    var a="";
+	var msg="";
+   
+    a = document.getElementById(idval).value;
+	msg = idval + "_msg";
+	if (a == "")
+	{
+		
+		document.getElementById(msg).innerHTML="pls enter value";
+	    document.getElementById(idval).className="reqInput";
+	
+		
+	}
+	else
+	{
+		document.getElementById(msg).innerHTML="";
+		document.getElementById(idval).className="";
+
+	}
+ 	// b = document.getElementById("ln").value;
+	// alert("hi " + a + " " + b);  
+	
+ }
+</script>
+
+
+<style type="text/css">
+.reqInput{
+	background-color: #FCDFFF;
+	border-top-style: dotted;
+	border-right-style: dotted;
+	border-bottom-style: dotted;
+	border-left-style: dotted;
+}
+</style>
+ 
+
+</head>
+<body>
+<div id="header">
+	
+      <div id="logo">
+        <div id="logo_text">
+          <!-- class="logo_colour", allows you to change the colour of the text -->
+          <h1><a href="homepage.php"><span class="logo_colour">Petmart and Grooming Salon</span></a></h1>
+          <h2>The place to be for your pets.</h2>
+        </div>
+      </div>
+      <div id="menubar">
+        <ul id="menu">
+          <!-- put class="selected" in the li tag for the selected page - to highlight which page you're on -->
+          <li><a href="homepage.php">Home</a></li>
+		   <li><a href="reservation.php">Reservation</a></li>
+          <li><a href="products.php">Products</a></li>
+		  <li><a href="transaction.php">My Transaction</a></li>
+        </ul>
+		<br>
+		
+		
+      </div>
+	  
+    </div>
+	
+<?php
+
+session_start();
+
+if(ISSET($_SESSION['custo_ID']) == ""){
+
+echo "<script>window.location.href = 'protected.html';</script>";
+
+}
+else{
+
+include("php/usrconnect.php");
+
+$result = mysqli_query($con,'SELECT * FROM customer WHERE custo_ID = "'.$_SESSION['custo_ID'].'" ');
+
+if(mysqli_num_rows($result) == 1){
+
+	while($row = mysqli_fetch_array($result)) {
+		echo $row['custo_fn'] . " " .$row['custo_ln']. ' <div id="site_content"><a href="logout.php">SIGN OUT</a>|<a href="homepage.php">HOME</a></div>';
+		
+	}
+
+}
+else if((mysqli_num_rows($result) > 1)){
+	echo "<script>alert('Warning: Duplicate accounts. Contact Administrator.');</script>";
+}
+else{
+	echo "<script>alert('Username or Password does not exist!');</script>";
+}
+
+
+
+mysqli_close($con);
+
+
+}
+
+?>	  
